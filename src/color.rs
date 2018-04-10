@@ -82,4 +82,32 @@ impl Color {
     }
 }
 
+#[cfg(test)]
+mod tests {
+    use color::Color;
+    #[test]
+    fn test_color_accessors() {
+        let c = Color { r: 1, g: 2, b: 3 };
+        assert_eq!(c.r(), 1);
+        assert_eq!(c.g(), 2);
+        assert_eq!(c.b(), 3);
+    }
 
+    #[test]
+    fn test_new_color() {
+        let c = Color::new(4, 5, 6);
+        assert_eq!(c.r(), 4);
+        assert_eq!(c.g(), 5);
+        assert_eq!(c.b(), 6);
+    }
+
+    #[test]
+    fn test_color_equals() {
+        let a = Color::new(7, 8, 9);
+        let b = Color::new(7, 8, 9);
+        let c = Color::new(10, 12, 11);
+
+        assert!(a == b);
+        assert!(a != c);
+    }
+}
