@@ -1,0 +1,6 @@
+[package]
+name = "msikeyboard-rs"
+version = "0.1.0"
+authors = ["Philippe Dugre <dugre.philippe@hotmail.com>"]
+
+[dependencies]
