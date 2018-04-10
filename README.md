@@ -1,6 +1,6 @@
 # msikeyboard-rs
 
-Graphical application using QT to control the backlight of a MSI keyboard.
+Rust library to control backlit on keyboards made by MSI.
 
 Licensing:
 
