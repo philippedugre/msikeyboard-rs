@@ -6,6 +6,8 @@ Licensing:
 
 This program is licensed as 3-clause BSD, terms are available in the LICENSE file.
 
+Based on a c++ version of msikeyboard by OliPro007.
+
 Based on a command-line version of msi-keyboard by bparker06.
 
 Based on the gist referenced in the issue #43 of the original project.
