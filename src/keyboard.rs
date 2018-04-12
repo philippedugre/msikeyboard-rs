@@ -33,10 +33,25 @@ impl Keyboard {
     }
 
     pub fn normal(&self, left: &Color, middle: &Color, right: &Color) -> Result<(), HidError> {
-        self.write_mode(modes::NORMAL)?;
         self.write_color(functions::SET, regions::LEFT, left)?;
         self.write_color(functions::SET, regions::MIDDLE, middle)?;
         self.write_color(functions::SET, regions::RIGHT, right)?;
+        self.write_mode(modes::NORMAL)?;
+        Ok(())
+    }
+
+    pub fn gaming(&self, left: &Color) -> Result<(), HidError> {
+        self.write_color(functions::SET, regions::LEFT, left)?;
+        self.write_mode(modes::GAMING)?;
+        Ok(())
+    }
+
+    pub fn breathing(&self, left: &Color, middle: &Color, right: &Color) -> Result<(), HidError> {
+        let c = Color::new(0, 0, 0);
+        self.write_gradient(regions::LEFT, left, &c)?;
+        self.write_gradient(regions::MIDDLE, middle, &c)?;
+        self.write_gradient(regions::RIGHT, right, &c)?;
+        self.write_mode(modes::BREATHING)?;
         Ok(())
     }
 
@@ -85,5 +100,7 @@ mod tests {
         let c3 = Color::new(0, 0, 255);
         let k = Keyboard::new().unwrap();
         k.normal(&c1, &c2, &c3).unwrap();
+        k.gaming(&c2).unwrap();
+        k.breathing(&c1, &c2, &c3).unwrap();
     }
 }
