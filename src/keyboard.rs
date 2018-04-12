@@ -1,6 +1,26 @@
 use color::Color;
 use hidapi::{HidApi, HidError};
 
+mod functions {
+    pub const SET: u8 = 0x40;
+    pub const GRAD: u8 = 0x44;
+}
+
+mod modes {
+    pub const NORMAL: u8 = 0x01;
+    pub const GAMING: u8 = 0x02;
+    pub const BREATHING: u8 = 0x03;
+    pub const AUDIO: u8 = 0x04;
+    pub const WAVE: u8 = 0x05;
+    pub const DUAL_COLOR: u8 = 0x06;
+}
+
+mod regions {
+    pub const LEFT: u8 = 0x01;
+    pub const MIDDLE: u8 = 0x02;
+    pub const RIGHT: u8 = 0x03;
+}
+
 struct Keyboard {
     api: HidApi,
 }
@@ -25,6 +45,14 @@ impl Keyboard {
         ];
 
         self.api.open(0x1770, 0xFF00)?.send_feature_report(&data)?;
+        Ok(())
+    }
+
+    fn write_gradient(&self, region: u8, first: Color, second: Color) -> Result<(), HidError> {
+        let index = (region - 1) * 3 + 1;
+        self.write_color(functions::GRAD, index, &first)?;
+        self.write_color(functions::GRAD, index + 1, &second)?;
+        self.write_color(functions::GRAD, index + 2, &Color::new(0x03, 0x03, 0x03))?;
         Ok(())
     }
 
