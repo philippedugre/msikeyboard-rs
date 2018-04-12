@@ -6,4 +6,7 @@ mod tests {
     }
 }
 
+extern crate hidapi;
+
 mod color;
+mod keyboard;
