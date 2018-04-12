@@ -133,24 +133,25 @@ mod tests {
     #[test]
     fn test_write_color() {
         // Uncomment line to test a method.
-        let c1 = Color::new(255, 0, 0);
-        let c2 = Color::new(0, 255, 0);
-        let c3 = Color::new(0, 0, 255);
+        let _c1 = Color::new(255, 0, 0);
+        let _c2 = Color::new(0, 255, 0);
+        let _c3 = Color::new(0, 0, 255);
 
-        let c4 = Color::new(100, 200, 100);
-        let c5 = Color::new(100, 100, 200);
-        let c6 = Color::new(200, 200, 200);
+        let _c4 = Color::new(100, 200, 100);
+        let _c5 = Color::new(100, 100, 200);
+        let _c6 = Color::new(200, 200, 200);
 
-        let k = Keyboard::new().unwrap();
+        let _k = Keyboard::new().unwrap();
 
-        //k.normal(&c1, &c2, &c3).unwrap();
-        //k.gaming(&c2).unwrap();
-        //k.breathing(&c1, &c2, &c3).unwrap();
-        //k.wave(&c1, &c2, &c3).unwrap();
-
-        //k.breathing((&c1, &c4), (&c2, &c5), (&c3, &c6)).unwrap();
-        //k.wave((&c1, &c4), (&c2, &c5), (&c3, &c6)).unwrap();
-
-        //k.wave((&c1, &c4), &c5, (&c3, &c6)).unwrap();
+//        _k.normal(&_c1, &_c2, &_c3).unwrap();
+//        _k.gaming(&_c2).unwrap();
+//        _k.breathing(&_c1, &_c2, &_c3).unwrap();
+//        _k.wave(&_c1, &_c2, &_c3).unwrap();
+//
+//        _k.breathing((&_c1, &_c4), (&_c2, &_c5), (&_c3, &_c6))
+//            .unwrap();
+//        _k.wave((&_c1, &_c4), (&_c2, &_c5), (&_c3, &_c6)).unwrap();
+//
+//        _k.wave((&_c1, &_c4), &_c5, (&_c3, &_c6)).unwrap();
     }
 }
