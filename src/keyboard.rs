@@ -46,22 +46,34 @@ impl Keyboard {
         Ok(())
     }
 
-    // TODO: Overload function for color pairs
-    pub fn breathing(&self, left: &Color, middle: &Color, right: &Color) -> Result<(), HidError> {
-        let c = Color::new(0, 0, 0);
-        self.write_gradient(regions::LEFT, left, &c)?;
-        self.write_gradient(regions::MIDDLE, middle, &c)?;
-        self.write_gradient(regions::RIGHT, right, &c)?;
+    pub fn breathing<T: IntoColorTuple, U: IntoColorTuple, V: IntoColorTuple>(
+        &self,
+        left: T,
+        middle: U,
+        right: V,
+    ) -> Result<(), HidError> {
+        let l = left.into();
+        let m = middle.into();
+        let r = right.into();
+        self.write_gradient(regions::LEFT, &l.0, &l.1)?;
+        self.write_gradient(regions::MIDDLE, &m.0, &m.1)?;
+        self.write_gradient(regions::RIGHT, &r.0, &r.1)?;
         self.write_mode(modes::BREATHING)?;
         Ok(())
     }
 
-    // TODO: Overload function for color pairs
-    pub fn wave(&self, left: &Color, middle: &Color, right: &Color) -> Result<(), HidError> {
-        let c = Color::new(0, 0, 0);
-        self.write_gradient(regions::LEFT, left, &c)?;
-        self.write_gradient(regions::MIDDLE, middle, &c)?;
-        self.write_gradient(regions::RIGHT, right, &c)?;
+    pub fn wave<T: IntoColorTuple, U: IntoColorTuple, V: IntoColorTuple>(
+        &self,
+        left: T,
+        middle: U,
+        right: V,
+    ) -> Result<(), HidError> {
+        let l = left.into();
+        let m = middle.into();
+        let r = right.into();
+        self.write_gradient(regions::LEFT, &l.0, &l.1)?;
+        self.write_gradient(regions::MIDDLE, &m.0, &m.1)?;
+        self.write_gradient(regions::RIGHT, &r.0, &r.1)?;
         self.write_mode(modes::WAVE)?;
         Ok(())
     }
@@ -98,22 +110,47 @@ impl Keyboard {
     }
 }
 
+pub trait IntoColorTuple {
+    fn into(self) -> (Color, Color);
+}
+
+impl<'a> IntoColorTuple for &'a Color {
+    fn into(self) -> (Color, Color) {
+        (self.clone(), Color::new(0, 0, 0))
+    }
+}
+
+impl<'a, 'b> IntoColorTuple for (&'a Color, &'b Color) {
+    fn into(self) -> (Color, Color) {
+        (self.0.clone(), self.1.clone())
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use color::Color;
     use keyboard::Keyboard;
     #[test]
     fn test_write_color() {
-        // Checks if there is an error. You can comment modes to test with your keyboard if the color matches
+        // Uncomment line to test a method.
         let c1 = Color::new(255, 0, 0);
         let c2 = Color::new(0, 255, 0);
         let c3 = Color::new(0, 0, 255);
 
+        let c4 = Color::new(100, 200, 100);
+        let c5 = Color::new(100, 100, 200);
+        let c6 = Color::new(200, 200, 200);
+
         let k = Keyboard::new().unwrap();
 
-        k.normal(&c1, &c2, &c3).unwrap();
-        k.gaming(&c2).unwrap();
-        k.breathing(&c1, &c2, &c3).unwrap();
-        k.wave(&c1, &c2, &c3).unwrap();
+        //k.normal(&c1, &c2, &c3).unwrap();
+        //k.gaming(&c2).unwrap();
+        //k.breathing(&c1, &c2, &c3).unwrap();
+        //k.wave(&c1, &c2, &c3).unwrap();
+
+        //k.breathing((&c1, &c4), (&c2, &c5), (&c3, &c6)).unwrap();
+        //k.wave((&c1, &c4), (&c2, &c5), (&c3, &c6)).unwrap();
+
+        //k.wave((&c1, &c4), &c5, (&c3, &c6)).unwrap();
     }
 }
