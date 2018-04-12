@@ -1,12 +1,16 @@
 # msikeyboard-rs
 
-Rust library to control backlit on keyboards made by MSI.
+Rust library to control backlit on laptop keyboards made by MSI. Tested on a MSI GE62 6QD.
+
+As of now, the library supports Normal, Gaming, Breathing and Wave mode. It uses the hidapi-rs crate and is mostly made for linux users.
+
+To run it, you need write-access to the device. An experimental udev rule is placed in the rules folder. You need to place it inside /etc/udev/rules.d folder and run udevadm trigger as root. 
 
 Licensing:
 
 This program is licensed as 3-clause BSD, terms are available in the LICENSE file.
 
-Based on a c++ version of msikeyboard by OliPro007.
+Based heavily on a c++/Qt GUI version of msikeyboard by OliPro007.
 
 Based on a command-line version of msi-keyboard by bparker06.
 
