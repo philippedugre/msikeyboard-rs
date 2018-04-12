@@ -21,7 +21,7 @@ mod regions {
     pub const RIGHT: u8 = 0x03;
 }
 
-struct Keyboard {
+pub struct Keyboard {
     api: HidApi,
 }
 
@@ -46,12 +46,23 @@ impl Keyboard {
         Ok(())
     }
 
+    // TODO: Overload function for color pairs
     pub fn breathing(&self, left: &Color, middle: &Color, right: &Color) -> Result<(), HidError> {
         let c = Color::new(0, 0, 0);
         self.write_gradient(regions::LEFT, left, &c)?;
         self.write_gradient(regions::MIDDLE, middle, &c)?;
         self.write_gradient(regions::RIGHT, right, &c)?;
         self.write_mode(modes::BREATHING)?;
+        Ok(())
+    }
+
+    // TODO: Overload function for color pairs
+    pub fn wave(&self, left: &Color, middle: &Color, right: &Color) -> Result<(), HidError> {
+        let c = Color::new(0, 0, 0);
+        self.write_gradient(regions::LEFT, left, &c)?;
+        self.write_gradient(regions::MIDDLE, middle, &c)?;
+        self.write_gradient(regions::RIGHT, right, &c)?;
+        self.write_mode(modes::WAVE)?;
         Ok(())
     }
 
@@ -93,14 +104,16 @@ mod tests {
     use keyboard::Keyboard;
     #[test]
     fn test_write_color() {
-        // Not a unit test. Should change keyboard to normal mode
-        // with Red/Green/Blue pattern in this order
+        // Checks if there is an error. You can comment modes to test with your keyboard if the color matches
         let c1 = Color::new(255, 0, 0);
         let c2 = Color::new(0, 255, 0);
         let c3 = Color::new(0, 0, 255);
+
         let k = Keyboard::new().unwrap();
+
         k.normal(&c1, &c2, &c3).unwrap();
         k.gaming(&c2).unwrap();
         k.breathing(&c1, &c2, &c3).unwrap();
+        k.wave(&c1, &c2, &c3).unwrap();
     }
 }
