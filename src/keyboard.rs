@@ -32,6 +32,14 @@ impl Keyboard {
         Ok(Keyboard { api })
     }
 
+    pub fn normal(&self, left: &Color, middle: &Color, right: &Color) -> Result<(), HidError> {
+        self.write_mode(modes::NORMAL)?;
+        self.write_color(functions::SET, regions::LEFT, left)?;
+        self.write_color(functions::SET, regions::MIDDLE, middle)?;
+        self.write_color(functions::SET, regions::RIGHT, right)?;
+        Ok(())
+    }
+
     fn write_color(&self, function: u8, zone: u8, color: &Color) -> Result<(), HidError> {
         let data = [
             0x01,
@@ -48,10 +56,10 @@ impl Keyboard {
         Ok(())
     }
 
-    fn write_gradient(&self, region: u8, first: Color, second: Color) -> Result<(), HidError> {
+    fn write_gradient(&self, region: u8, first: &Color, second: &Color) -> Result<(), HidError> {
         let index = (region - 1) * 3 + 1;
-        self.write_color(functions::GRAD, index, &first)?;
-        self.write_color(functions::GRAD, index + 1, &second)?;
+        self.write_color(functions::GRAD, index, first)?;
+        self.write_color(functions::GRAD, index + 1, second)?;
         self.write_color(functions::GRAD, index + 2, &Color::new(0x03, 0x03, 0x03))?;
         Ok(())
     }
@@ -76,9 +84,6 @@ mod tests {
         let c2 = Color::new(0, 255, 0);
         let c3 = Color::new(0, 0, 255);
         let k = Keyboard::new().unwrap();
-        k.write_mode(0x01).unwrap();
-        k.write_color(0x40, 1, &c1).unwrap();
-        k.write_color(0x40, 2, &c2).unwrap();
-        k.write_color(0x40, 3, &c3).unwrap();
+        k.normal(&c1, &c2, &c3).unwrap();
     }
 }
