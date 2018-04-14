@@ -4,4 +4,4 @@ version = "0.1.0"
 authors = ["Philippe Dugre <dugre.philippe@hotmail.com>"]
 
 [dependencies]
-hidapi = "0.4.1"
+hidapi = { git = "https://github.com/ruabmbua/hidapi-rs.git"}

@@ -1,5 +1,5 @@
 use color::Color;
-use hidapi::{HidApi, HidError};
+use hidapi::{HidApi, HidDevice, HidError};
 
 mod functions {
     pub const SET: u8 = 0x40;
@@ -21,15 +21,14 @@ mod regions {
     pub const RIGHT: u8 = 0x03;
 }
 
-pub struct Keyboard {
-    api: HidApi,
+pub struct Keyboard{
+    device: HidDevice
 }
 
-impl Keyboard {
+impl<'a> Keyboard {
     pub fn new() -> Result<Keyboard, HidError> {
-        // TODO: Change the HidApi in the struct to a HidDevice
-        let api = HidApi::new()?;
-        Ok(Keyboard { api })
+        let device = HidApi::new()?.open(0x1770, 0xFF00)?;
+        Ok(Keyboard { device })
     }
 
     pub fn normal(&self, left: Color, middle: Color, right: Color) -> Result<(), HidError> {
@@ -90,7 +89,7 @@ impl Keyboard {
             0x00,
         ];
 
-        self.api.open(0x1770, 0xFF00)?.send_feature_report(&data)?;
+        self.device.send_feature_report(&data)?;
         Ok(())
     }
 
@@ -105,7 +104,7 @@ impl Keyboard {
     fn write_mode(&self, mode: u8) -> Result<(), HidError> {
         let data = [0x01, 0x02, 0x41, mode, 0x00, 0x00, 0x00, 0x00];
 
-        self.api.open(0x1770, 0xFF00)?.send_feature_report(&data)?;
+        self.device.send_feature_report(&data)?;
         Ok(())
     }
 }
@@ -143,14 +142,14 @@ mod tests {
 
         let _k = Keyboard::new().unwrap();
 
-//        _k.normal(_c1, _c2, _c3).unwrap();
-//        _k.gaming(_c2).unwrap();
-//        _k.breathing(_c1, _c2, _c3).unwrap();
-//        _k.wave(_c1, _c2, _c3).unwrap();
-//
-//        _k.breathing((_c1, _c4), (_c2, _c5), (_c3, _c6)).unwrap();
-//        _k.wave((_c1, _c4), (_c2, _c5), (_c3, _c6)).unwrap();
-//
-//        _k.wave((_c1, _c4), _c5, (_c3, _c6)).unwrap();
+        //_k.normal(_c1, _c2, _c3).unwrap();
+        //_k.gaming(_c2).unwrap();
+        //_k.breathing(_c1, _c2, _c3).unwrap();
+        //_k.wave(_c1, _c2, _c3).unwrap();
+
+        //_k.breathing((_c1, _c4), (_c2, _c5), (_c3, _c6)).unwrap();
+        //_k.wave((_c1, _c4), (_c2, _c5), (_c3, _c6)).unwrap();
+
+        //_k.wave((_c1, _c4), _c5, (_c3, _c6)).unwrap();
     }
 }
