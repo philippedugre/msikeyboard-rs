@@ -10,9 +10,9 @@ mod modes {
     pub const NORMAL: u8 = 0x01;
     pub const GAMING: u8 = 0x02;
     pub const BREATHING: u8 = 0x03;
-    pub const AUDIO: u8 = 0x04;
+    //pub const AUDIO: u8 = 0x04; //TODO
     pub const WAVE: u8 = 0x05;
-    pub const DUAL_COLOR: u8 = 0x06;
+    //pub const DUAL_COLOR: u8 = 0x06; //TODO
 }
 
 mod regions {
@@ -32,7 +32,7 @@ impl Keyboard {
         Ok(Keyboard { api })
     }
 
-    pub fn normal(&self, left: &Color, middle: &Color, right: &Color) -> Result<(), HidError> {
+    pub fn normal(&self, left: Color, middle: Color, right: Color) -> Result<(), HidError> {
         self.write_color(functions::SET, regions::LEFT, left)?;
         self.write_color(functions::SET, regions::MIDDLE, middle)?;
         self.write_color(functions::SET, regions::RIGHT, right)?;
@@ -40,7 +40,7 @@ impl Keyboard {
         Ok(())
     }
 
-    pub fn gaming(&self, left: &Color) -> Result<(), HidError> {
+    pub fn gaming(&self, left: Color) -> Result<(), HidError> {
         self.write_color(functions::SET, regions::LEFT, left)?;
         self.write_mode(modes::GAMING)?;
         Ok(())
@@ -55,9 +55,9 @@ impl Keyboard {
         let l = left.into();
         let m = middle.into();
         let r = right.into();
-        self.write_gradient(regions::LEFT, &l.0, &l.1)?;
-        self.write_gradient(regions::MIDDLE, &m.0, &m.1)?;
-        self.write_gradient(regions::RIGHT, &r.0, &r.1)?;
+        self.write_gradient(regions::LEFT, l.0, l.1)?;
+        self.write_gradient(regions::MIDDLE, m.0, m.1)?;
+        self.write_gradient(regions::RIGHT, r.0, r.1)?;
         self.write_mode(modes::BREATHING)?;
         Ok(())
     }
@@ -71,14 +71,14 @@ impl Keyboard {
         let l = left.into();
         let m = middle.into();
         let r = right.into();
-        self.write_gradient(regions::LEFT, &l.0, &l.1)?;
-        self.write_gradient(regions::MIDDLE, &m.0, &m.1)?;
-        self.write_gradient(regions::RIGHT, &r.0, &r.1)?;
+        self.write_gradient(regions::LEFT, l.0, l.1)?;
+        self.write_gradient(regions::MIDDLE, m.0, m.1)?;
+        self.write_gradient(regions::RIGHT, r.0, r.1)?;
         self.write_mode(modes::WAVE)?;
         Ok(())
     }
 
-    fn write_color(&self, function: u8, zone: u8, color: &Color) -> Result<(), HidError> {
+    fn write_color(&self, function: u8, zone: u8, color: Color) -> Result<(), HidError> {
         let data = [
             0x01,
             0x02,
@@ -94,11 +94,11 @@ impl Keyboard {
         Ok(())
     }
 
-    fn write_gradient(&self, region: u8, first: &Color, second: &Color) -> Result<(), HidError> {
+    fn write_gradient(&self, region: u8, first: Color, second: Color) -> Result<(), HidError> {
         let index = (region - 1) * 3 + 1;
         self.write_color(functions::GRAD, index, first)?;
         self.write_color(functions::GRAD, index + 1, second)?;
-        self.write_color(functions::GRAD, index + 2, &Color::new(0x03, 0x03, 0x03))?;
+        self.write_color(functions::GRAD, index + 2, Color::new(0x03, 0x03, 0x03))?;
         Ok(())
     }
 
@@ -114,15 +114,15 @@ pub trait IntoColorTuple {
     fn into(self) -> (Color, Color);
 }
 
-impl<'a> IntoColorTuple for &'a Color {
+impl IntoColorTuple for Color {
     fn into(self) -> (Color, Color) {
-        (self.clone(), Color::new(0, 0, 0))
+        (self, Color::new(0, 0, 0))
     }
 }
 
-impl<'a, 'b> IntoColorTuple for (&'a Color, &'b Color) {
+impl IntoColorTuple for (Color, Color) {
     fn into(self) -> (Color, Color) {
-        (self.0.clone(), self.1.clone())
+        self
     }
 }
 
@@ -143,15 +143,14 @@ mod tests {
 
         let _k = Keyboard::new().unwrap();
 
-//        _k.normal(&_c1, &_c2, &_c3).unwrap();
-//        _k.gaming(&_c2).unwrap();
-//        _k.breathing(&_c1, &_c2, &_c3).unwrap();
-//        _k.wave(&_c1, &_c2, &_c3).unwrap();
+//        _k.normal(_c1, _c2, _c3).unwrap();
+//        _k.gaming(_c2).unwrap();
+//        _k.breathing(_c1, _c2, _c3).unwrap();
+//        _k.wave(_c1, _c2, _c3).unwrap();
 //
-//        _k.breathing((&_c1, &_c4), (&_c2, &_c5), (&_c3, &_c6))
-//            .unwrap();
-//        _k.wave((&_c1, &_c4), (&_c2, &_c5), (&_c3, &_c6)).unwrap();
+//        _k.breathing((_c1, _c4), (_c2, _c5), (_c3, _c6)).unwrap();
+//        _k.wave((_c1, _c4), (_c2, _c5), (_c3, _c6)).unwrap();
 //
-//        _k.wave((&_c1, &_c4), &_c5, (&_c3, &_c6)).unwrap();
+//        _k.wave((_c1, _c4), _c5, (_c3, _c6)).unwrap();
     }
 }
